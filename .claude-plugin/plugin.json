@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Interactive 3-D visualizer for electrical backplates and control panels: auto-routed wires, wiring diagram, step-by-step wiring guide and cut list from one JSON spec.",
   "author": { "name": "Rearden Research" },
-  "homepage": "https://github.com/Parth-Rearden/panel-visualizer",
-  "repository": "https://github.com/Parth-Rearden/panel-visualizer",
+  "homepage": "https://github.com/R2OS-Ai/panel-visualizer",
+  "repository": "https://github.com/R2OS-Ai/panel-visualizer",
   "license": "MIT",
   "keywords": ["electrical", "wiring", "control-panel", "backplate", "cut-list", "3d", "visualizer", "hardware"]
 }

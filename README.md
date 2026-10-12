@@ -27,7 +27,7 @@ from this repo into `.claude/skills/` in your own repo. Claude Code finds it the
 Run this from your repo's root folder. It downloads only the skill folder:
 
 ```bash
-mkdir -p .claude/skills && curl -fsSL https://github.com/Parth-Rearden/panel-visualizer/archive/refs/heads/main.tar.gz | tar -xz -C .claude/skills --strip-components=2 panel-visualizer-main/skills/panel-visualizer
+mkdir -p .claude/skills && curl -fsSL https://github.com/R2OS-Ai/panel-visualizer/archive/refs/heads/main.tar.gz | tar -xz -C .claude/skills --strip-components=2 panel-visualizer-main/skills/panel-visualizer
 ```
 
 Then commit it, so everyone who clones your repo gets the skill too:
@@ -40,7 +40,7 @@ git add .claude/skills/panel-visualizer && git commit -m "Add the panel-visualiz
 <summary>With <code>git clone</code> instead</summary>
 
 ```bash
-git clone --depth 1 https://github.com/Parth-Rearden/panel-visualizer /tmp/panel-visualizer
+git clone --depth 1 https://github.com/R2OS-Ai/panel-visualizer /tmp/panel-visualizer
 mkdir -p .claude/skills && cp -r /tmp/panel-visualizer/skills/panel-visualizer .claude/skills/
 ```
 </details>
@@ -49,7 +49,7 @@ mkdir -p .claude/skills && cp -r /tmp/panel-visualizer/skills/panel-visualizer .
 <summary>Windows (PowerShell)</summary>
 
 ```powershell
-Invoke-WebRequest https://github.com/Parth-Rearden/panel-visualizer/archive/refs/heads/main.zip -OutFile pv.zip
+Invoke-WebRequest https://github.com/R2OS-Ai/panel-visualizer/archive/refs/heads/main.zip -OutFile pv.zip
 Expand-Archive pv.zip -DestinationPath pv-tmp
 New-Item -ItemType Directory -Force .claude\skills | Out-Null
 Copy-Item -Recurse pv-tmp\panel-visualizer-main\skills\panel-visualizer .claude\skills\
@@ -88,7 +88,7 @@ Claude Code won't find it. Move the inner `panel-visualizer` folder up into `.cl
 The same folder in your home directory makes the skill available everywhere, just for you:
 
 ```bash
-mkdir -p ~/.claude/skills && curl -fsSL https://github.com/Parth-Rearden/panel-visualizer/archive/refs/heads/main.tar.gz | tar -xz -C ~/.claude/skills --strip-components=2 panel-visualizer-main/skills/panel-visualizer
+mkdir -p ~/.claude/skills && curl -fsSL https://github.com/R2OS-Ai/panel-visualizer/archive/refs/heads/main.tar.gz | tar -xz -C ~/.claude/skills --strip-components=2 panel-visualizer-main/skills/panel-visualizer
 ```
 
 ### As a plugin
@@ -96,7 +96,7 @@ mkdir -p ~/.claude/skills && curl -fsSL https://github.com/Parth-Rearden/panel-v
 Inside Claude Code:
 
 ```
-/plugin marketplace add Parth-Rearden/panel-visualizer
+/plugin marketplace add R2OS-Ai/panel-visualizer
 /plugin install panel-visualizer@panel-visualizer
 ```
 
