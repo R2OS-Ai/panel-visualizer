@@ -21,6 +21,7 @@ layout, routes every wire along the open gaps (never over a device), and writes 
 - the cut list (lengths from the routes + slack + termination allowance), "wire to buy" totals, CSV and Markdown.
 
 Paths below are relative to this skill's folder (its base directory is shown when the skill loads). Python 3.8+, stdlib only.
+On Windows the interpreter is usually `python` (or `py`), not `python3`.
 
 ## Workflow
 
