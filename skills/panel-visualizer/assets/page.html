@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root { --bg:#eef0ee; --surface:#fff; --ink:#1b2124; --muted:#5d676c; --line:#d3d8d6; --accent:#0d6b62; --accent-ink:#fff;
+  --stage:#dfe4e2; --stage2:#c9d0cd; --sch-bg:#fff; --sch-blk:#f6f7f4; --sch-blk2:#eef0ec; --sch-ink:#1b2124; --sch-mut:#5d676c;
+  --f-display:"Barlow Condensed","Arial Narrow",sans-serif; --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14191b; --surface:#1d2427; --ink:#e5eae8; --muted:#9aa6aa;
+  --line:#2e383b; --accent:#4cc2b4; --accent-ink:#0f1517; --stage:#1a2124; --stage2:#10161a; --sch-bg:#1d2427; --sch-blk:#232c30;
+  --sch-blk2:#273135; --sch-ink:#e5eae8; --sch-mut:#9aa6aa; color-scheme:dark; } }
+:root[data-theme="dark"] { --bg:#14191b; --surface:#1d2427; --ink:#e5eae8; --muted:#9aa6aa; --line:#2e383b; --accent:#4cc2b4;
+  --accent-ink:#0f1517; --stage:#1a2124; --stage2:#10161a; --sch-bg:#1d2427; --sch-blk:#232c30; --sch-blk2:#273135; --sch-ink:#e5eae8;
+  --sch-mut:#9aa6aa; color-scheme:dark; }
+* { box-sizing:border-box; }
+body { background:var(--bg); color:var(--ink); font:15px/1.5 var(--f-body); margin:0; padding-inline:16px; padding-block:18px 40px; }
+a { color:var(--accent); }
+.wrap { max-width:1400px; margin:0 auto; display:grid; gap:16px; }
+h1 { font-family:var(--f-display); font-size:clamp(1.8rem,4vw,2.5rem); margin:0; line-height:1; text-wrap:balance; }
+h2.sec { font-family:var(--f-display); font-size:1.6rem; margin:18px 0 0; }
+.eyebrow { font-family:var(--f-mono); font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+header p, .lede { margin:4px 0 0; color:var(--muted); max-width:80ch; }
+.bench { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:14px; }
+@media (max-width:900px) { .bench { grid-template-columns:1fr; } }
+.stage { position:relative; min-width:0; height:min(80vh,860px); min-height:420px; border-radius:6px; overflow:hidden;
+  border:1px solid var(--line); background:radial-gradient(ellipse at 50% 40%,var(--stage),var(--stage2)); }
+canvas { display:block; width:100%; height:100%; touch-action:none; }
+.tip { position:absolute; pointer-events:none; background:var(--surface); color:var(--ink); border:1px solid var(--line); border-radius:4px;
+  padding:8px 10px; font-size:.85rem; max-width:320px; box-shadow:0 6px 20px rgb(0 0 0/.18); z-index:3; }
+.tip b { display:block; }
+.labels { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.lb { position:absolute; transform:translate(-50%,-50%); font:600 .72rem var(--f-mono); background:var(--surface); color:var(--ink);
+  border:1px solid var(--line); border-radius:99px; padding:1px 8px; white-space:nowrap; opacity:.92; }
+.hint { position:absolute; left:12px; bottom:10px; font-family:var(--f-mono); font-size:.72rem; color:var(--muted); }
+aside { display:grid; gap:14px; align-content:start; background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:16px; min-width:0; }
+aside h3 { font-family:var(--f-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 6px; font-weight:600; }
+.row { display:flex; flex-wrap:wrap; gap:6px; }
+button { font:600 .84rem var(--f-body); color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:4px; padding:6px 10px; cursor:pointer; }
+button[aria-pressed="true"] { background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+button:focus-visible, input:focus-visible, a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+label.t { display:flex; align-items:center; gap:8px; padding:2px 0; cursor:pointer; }
+label.t input { accent-color:var(--accent); margin:0; }
+.sw { display:inline-block; width:12px; height:12px; border-radius:2px; flex:none; margin-right:6px; vertical-align:-1px; border:1px solid rgb(0 0 0/.15); }
+input[type=range] { width:100%; accent-color:var(--accent); }
+.note { font-size:.86rem; color:var(--muted); margin:0; }
+.facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; }
+.fact { background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:12px 14px; }
+.fact b { display:block; font-family:var(--f-display); font-size:1.3rem; }
+.fact span { color:var(--muted); font-size:.88rem; }
+.panel { background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:14px; overflow-x:auto; }
+.panel > svg { display:block; min-width:640px; max-height:1100px; width:100%; height:auto; }
+table { border-collapse:collapse; width:100%; min-width:640px; font-size:.88rem; }
+th, td { text-align:left; padding:6px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { font-family:var(--f-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+td.n { font-family:var(--f-mono); font-variant-numeric:tabular-nums; }
+code { font-family:var(--f-mono); font-size:.9em; }
+.stepper { display:grid; gap:14px; }
+.stepnav { align-items:center; justify-content:space-between; }
+#tabs button { min-width:36px; }
+.stepgrid { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:18px; align-items:start; }
+@media (max-width:980px) { .stepgrid { grid-template-columns:1fr; } }
+.stepfig svg { display:block; width:100%; height:auto; }
+.sth { font-family:var(--f-display); font-size:1.5rem; margin:2px 0 8px; }
+.steptext ul { margin:0 0 12px; padding-left:1.2em; display:grid; gap:6px; }
+table.st { min-width:0; }
+ol.steps { margin:0; padding-left:1.3em; max-width:80ch; display:grid; gap:6px; }
+.head { display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:10px; }
+footer { color:var(--muted); font-size:.8rem; margin-top:12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="eyebrow">{{EYEBROW}}</div>
+    <h1>{{TITLE}}</h1>
+    <p>{{INTRO}}</p>
+    <p>Drag to turn, scroll to zoom, hover anything. <b>Explode</b> lifts every part off the plate so you can see what's under it.</p></header>
+  <div class="bench">
+    <div class="stage" id="stage"><canvas id="c" aria-label="3-D model of the panel"></canvas>
+      <div class="labels" id="labels"></div><div class="tip" id="tip" hidden></div>
+      <div class="hint">Drag: turn · Scroll: zoom · Right-drag: pan · Hover: name</div></div>
+    <aside>
+      <div><h3>View</h3><div class="row" id="views"><button data-v="iso" aria-pressed="true">3/4</button><button data-v="front">Front</button>
+        <button data-v="side">Side</button><button data-v="top">Top</button><button data-v="back">Back</button></div></div>
+      <div><h3>Explode</h3><input type="range" id="lift" min="0" max="1" step="0.01" value="0" aria-label="Explode"></div>
+      <div><h3>Colour wires by</h3><div class="row" id="cmode"><button data-m="wire" aria-pressed="true">Insulation</button><button data-m="group">Group</button></div></div>
+      <div><h3>Wires</h3><div id="groups"></div></div>
+      <div><h3>Show</h3><div id="layers"></div></div>
+      <p class="note">Every wire runs along the open gaps between the parts. Its route is where its cut length comes from.</p>
+    </aside>
+  </div>
+  <section class="facts">{{FACTS}}</section>
+
+  <h2 class="sec" id="wire-steps">Wire it, step by step</h2>
+  <p class="lede">{{NSTEPS}} steps. Each picture shows only that step's wires in colour, with a dot on each end where it lands.
+     Wires from earlier steps are grey. Tick each wire off as you go: the ticks stay in this browser.</p>
+  <div class="panel stepper">
+    <div class="row stepnav"><button id="prev">← Back</button><div class="row" id="tabs">{{STEPTABS}}</div><button id="next">Next →</button></div>
+    {{STEPS}}
+  </div>
+
+  <h2 class="sec">Wiring on the plate</h2>
+  <p class="lede">The plate seen from the front. Every part is drawn where it sits and every wire along the route it takes in the 3-D
+     model. The numbers are the wire numbers in the cut list. Hover a wire for its two ends.</p>
+  <div class="panel">{{PSVG}}</div>
+
+  <div class="head"><h2 class="sec">Wire cut list ({{NW}} wires)</h2><button id="csv">Download CSV</button></div>
+  <p class="lede">Lengths come from the routes, plus slack and an allowance for the two ends. Label each wire with its number at both
+     ends before you fit it.</p>
+  <div class="panel"><table><thead><tr><th>#</th><th>From</th><th>To</th><th>Gauge</th><th>Colour</th><th>mm</th><th>Group</th></tr></thead>
+    <tbody>{{ROWS}}</tbody></table></div>
+
+  <h2 class="sec">Wire to buy</h2>
+  <div class="panel"><table><thead><tr><th>Gauge</th><th>Colour</th><th>Wires</th><th>Total cut length</th></tr></thead>
+    <tbody>{{BUYROWS}}</tbody></table></div>
+  {{BUILD}}
+  <footer>Built with the panel-visualizer skill: one JSON spec → this page, the wiring diagrams and the cut list.</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script>
+const OBJ = {{OBJ}}, BLOB = {{BLOB}}, WIRES = {{WIRES}}, LABELS = {{LABELS}}, GROUPS = {{GROUPS}}, VIEW = {{VIEW}}, LIFT = {{LIFT}};
+const CSV = {{CSV}}, KEY = {{KEY}}, CSVNAME = {{CSVNAME}};
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+                set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+// steps: tabs, back / next, ticks remembered in this browser
+(function () {
+  const steps = [...document.querySelectorAll(".step")], tabs = [...document.querySelectorAll("#tabs button")];
+  let cur = 1;
+  function go(n) {
+    cur = Math.max(1, Math.min(steps.length, n));
+    steps.forEach(s => (s.hidden = +s.dataset.step !== cur));
+    tabs.forEach(t => t.setAttribute("aria-pressed", +t.dataset.go === cur));
+  }
+  tabs.forEach(t => t.addEventListener("click", () => go(+t.dataset.go)));
+  $("#prev").addEventListener("click", () => go(cur - 1));
+  $("#next").addEventListener("click", () => go(cur + 1));
+  const m = /^#?step-(\d+)$/.exec(location.hash); if (m) go(+m[1]);
+  let ticks = {};
+  try { ticks = JSON.parse(store.get(KEY) || "{}") || {}; } catch (e) {}
+  document.querySelectorAll("[data-tick]").forEach(cb => {
+    cb.checked = !!ticks[cb.dataset.tick];
+    cb.addEventListener("change", () => { ticks[cb.dataset.tick] = cb.checked; store.set(KEY, JSON.stringify(ticks)); });
+  });
+})();
+$("#csv").addEventListener("click", () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([CSV], { type: "text/csv" })); a.download = CSVNAME;
+  document.body.appendChild(a); a.click(); a.remove();
+});
+
+// side panel: a switch per wire group and per layer that has anything in it
+const LAYERS = [["plate", "Plate", "#e8742a"], ["parts", "Parts", "#1f7fcc"], ["terminals", "Terminals", "#c4c9ce"],
+  ["screws", "Mounting screws", "#c4c9ce"], ["walls", "Box-wall items", "#3b3f44"], ["zones", "Wiring room and lanes (kept clear)", "#2bb3a3"],
+  ["box", "Enclosure", "#9aa3ab"]];
+const present = new Set(OBJ.map(o => o.layer));
+$("#groups").innerHTML = GROUPS.filter(g => g.n).map(g =>
+  `<label class="t"><input type="checkbox" data-w="${esc(g.id)}" checked><span class="sw" style="background:${esc(g.color)}"></span>${esc(g.label)} (${g.n})</label>`).join("");
+$("#layers").innerHTML = LAYERS.filter(([k]) => present.has(k)).map(([k, t, c]) =>
+  `<label class="t"><input type="checkbox" data-l="${k}"${k === "box" || k === "terminals" ? "" : " checked"}><span class="sw" style="background:${c}"></span>${t}</label>`).join("")
+  + (LABELS.length ? `<label class="t"><input type="checkbox" id="L-labels" checked><span class="sw" style="background:var(--line)"></span>Labels</label>` : "");
+
+if (!window.THREE) { $("#stage").insertAdjacentHTML("beforeend", "<p style='padding:20px'>Couldn't load the 3-D library. Check your connection and reload.</p>"); }
+else {
+  const stage = $("#stage"), canvas = $("#c"), tip = $("#tip"), S = VIEW.s;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 5, 9000 * S), ctl = new THREE.OrbitControls(cam, canvas);
+  ctl.enableDamping = true;
+  const C = new THREE.Vector3(VIEW.cx, VIEW.cy, VIEW.cz);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6b7378, 0.8));
+  const key = new THREE.DirectionalLight(0xffffff, 0.7); key.position.set(-300 * S, 700 * S, 900 * S); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.3); rim.position.set(700 * S, -200 * S, 300 * S); scene.add(rim);
+  const loader = new THREE.STLLoader(), geoms = {};
+  const b64 = s => { const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u.buffer; };
+  function geom(k) {
+    if (geoms[k]) return geoms[k];
+    let g;
+    if (k.startsWith("cyl:")) { const [, r, l] = k.split(":").map(Number); g = new THREE.CylinderGeometry(r, r, l, 28); }
+    else if (k.startsWith("box:")) { const [, w, h, d] = k.split(":").map(Number); g = new THREE.BoxGeometry(w, h, d); }
+    else { g = loader.parse(b64(BLOB[k])); g.computeVertexNormals(); }
+    return (geoms[k] = g);
+  }
+  const meshes = [];
+  for (const o of OBJ) {
+    const m = new THREE.Mesh(geom(o.geom), new THREE.MeshStandardMaterial({ color: o.color, roughness: o.layer === "plate" ? 0.62 : 0.5,
+      metalness: 0.05, transparent: o.opacity < 1, opacity: o.opacity, side: THREE.DoubleSide, depthWrite: o.opacity >= 1 }));
+    m.matrixAutoUpdate = false;
+    m.userData = { o, base: new THREE.Matrix4().set(...o.m) };
+    m.matrix.copy(m.userData.base); scene.add(m); meshes.push(m);
+    if (o.edges) m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), new THREE.LineBasicMaterial({ color: o.color })));
+  }
+  const wireMeshes = [];
+  function tube(w, e) {
+    const P = w.pts.map((p, i) => new THREE.Vector3(p[0], p[1], p[2] + LIFT * e * w.lf[i]));
+    const path = new THREE.CurvePath();
+    for (let i = 1; i < P.length; i++) path.add(new THREE.LineCurve3(P[i - 1], P[i]));
+    return new THREE.TubeGeometry(path, Math.max(8, P.length * 8), w.r, 8, false);
+  }
+  for (const w of WIRES) {
+    const m = new THREE.Mesh(tube(w, 0), new THREE.MeshStandardMaterial({ color: w.color, roughness: 0.45, metalness: 0.05 }));
+    m.userData = { o: { id: w.id, name: w.label, layer: "wire", note: w.note }, w };
+    scene.add(m); wireMeshes.push(m);
+  }
+  function lift(e) {
+    for (const m of meshes) {
+      const l = m.userData.o.lift;
+      if (!l) continue;
+      const t = new THREE.Matrix4().makeTranslation(0, 0, LIFT * e * l);
+      m.matrix.multiplyMatrices(t, m.userData.base); m.matrixWorldNeedsUpdate = true;
+    }
+    for (const m of wireMeshes) if (m.userData.w.lf.some(f => f)) { m.geometry.dispose(); m.geometry = tube(m.userData.w, e); }
+  }
+  $("#lift").addEventListener("input", e => lift(+e.target.value));
+  function layers() {
+    const on = {}, won = {};
+    document.querySelectorAll("[data-l]").forEach(i => (on[i.dataset.l] = i.checked));
+    document.querySelectorAll("[data-w]").forEach(i => (won[i.dataset.w] = i.checked));
+    for (const m of meshes) m.visible = on[m.userData.o.layer] !== false;
+    for (const m of wireMeshes) m.visible = won[m.userData.w.group] !== false;
+    const ll = $("#L-labels"); $("#labels").hidden = ll ? !ll.checked : true;
+  }
+  document.querySelectorAll("aside input[type=checkbox]").forEach(i => i.addEventListener("change", layers));
+  const GC = Object.fromEntries(GROUPS.map(g => [g.id, g.color]));
+  document.querySelectorAll("#cmode button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("#cmode button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    const byGroup = b.dataset.m === "group";
+    for (const m of wireMeshes) m.material.color.set(byGroup ? GC[m.userData.w.group] : m.userData.w.color);
+  }));
+  const VIEWS = { iso: [C.x + 560 * S, C.y + 300 * S, 900 * S], front: [C.x, C.y, 1250 * S], side: [C.x + 1150 * S, C.y + 40 * S, 120 * S],
+                  top: [C.x, C.y + 1000 * S, 500 * S], back: [C.x + 300 * S, C.y + 160 * S, -1000 * S] };
+  function view(v) { cam.position.set(...VIEWS[v]); ctl.target.copy(C); ctl.update();
+    document.querySelectorAll("#views button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v)); }
+  document.querySelectorAll("#views button").forEach(b => b.addEventListener("click", () => view(b.dataset.v)));
+  const ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
+  canvas.addEventListener("pointermove", ev => {
+    const r = canvas.getBoundingClientRect();
+    mouse.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(mouse, cam);
+    const hit = ray.intersectObjects([...meshes, ...wireMeshes].filter(m => m.visible && m.userData.o.layer !== "box"))[0];
+    if (!hit) { tip.hidden = true; return; }
+    const o = hit.object.userData.o;
+    tip.innerHTML = `<b>${esc(o.name)}</b>${esc(o.note || "")}`; tip.hidden = false;
+    tip.style.left = Math.min(ev.clientX - r.left + 14, r.width - tip.offsetWidth - 8) + "px";
+    tip.style.top = Math.min(ev.clientY - r.top + 14, r.height - tip.offsetHeight - 8) + "px";
+  });
+  canvas.addEventListener("pointerleave", () => (tip.hidden = true));
+  const labs = LABELS.map(l => { const d = document.createElement("div"); d.className = "lb"; d.textContent = l.t; $("#labels").appendChild(d);
+    return { d, v: new THREE.Vector3(...l.p), lift: l.lift || 0 }; });
+  function placeLabels() {
+    const w = stage.clientWidth, h = stage.clientHeight, e = +$("#lift").value;
+    for (const L of labs) {
+      const v = L.v.clone(); v.z += LIFT * e * L.lift;
+      const p = v.project(cam); L.d.hidden = p.z > 1;
+      L.d.style.left = ((p.x + 1) / 2 * w) + "px"; L.d.style.top = ((1 - p.y) / 2 * h) + "px";
+    }
+  }
+  function size() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
+  new ResizeObserver(size).observe(stage); size(); view("iso"); layers(); lift(0);
+  (function loop() { ctl.update(); renderer.render(scene, cam); placeLabels(); requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "panel-visualizer",
+  "description": "The panel-visualizer skill for Claude Code.",
+  "owner": { "name": "Rearden Research" },
+  "plugins": [
+    {
+      "name": "panel-visualizer",
+      "source": "./",
+      "description": "Interactive 3-D visualizer for electrical backplates and control panels: auto-routed wires, wiring diagram, step-by-step wiring guide and cut list from one JSON spec.",
+      "version": "1.0.0",
+      "category": "productivity"
+    }
+  ]
+}

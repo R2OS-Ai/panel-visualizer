@@ -1,0 +1,4 @@
+# built pages: rebuild with skills/panel-visualizer/scripts/build_panel.py
+*-build/
+__pycache__/
+.DS_Store

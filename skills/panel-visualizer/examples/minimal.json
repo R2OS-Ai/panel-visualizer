@@ -1,0 +1,59 @@
+{
+  "title": "12 V pump controller",
+  "eyebrow": "Example panel",
+  "intro": "A fused 12 V supply feeds two bus bars. A small controller switches a relay, and the relay switches the pump. Edit this file: move the parts, add your own, and list your wires.",
+  "plate": { "w": 320, "h": 220, "t": 5, "color": "#e8742a" },
+  "gap": 20,
+  "groups": [
+    { "id": "power", "label": "Supply and bus", "color": "#e0794a" },
+    { "id": "control", "label": "Controller and relay", "color": "#2bb3a3" },
+    { "id": "load", "label": "Pump", "color": "#e8a317" }
+  ],
+  "parts": [
+    { "id": "fuse", "name": "Fuse holder, 10 A blade", "label": "Fuse 10 A", "x": 30, "y": 150, "w": 48, "h": 27, "d": 14,
+      "color": "#26292e", "room": [12, 12, 0, 0], "holes": [[6, 13.5, 4.3], [42, 13.5, 4.3]],
+      "terminals": { "in": "left@13.5", "out": "right@13.5" } },
+    { "id": "bar_pos", "name": "Bus bar +12 V, 6 screws", "label": "+12 V bar", "x": 110, "y": 160, "w": 110, "h": 25, "d": 20,
+      "color": "#b3261e", "room": [16, 16, 0, 22], "holes": [[6, 12.5, 5.3], [104, 12.5, 5.3]],
+      "busbar": { "screws": 6, "pitch": 12, "studs": 45, "a_end": "left", "lugs": "up" } },
+    { "id": "bar_neg", "name": "Bus bar 0 V, 6 screws", "label": "0 V bar", "x": 110, "y": 115, "w": 110, "h": 25, "d": 20,
+      "color": "#2a2d31", "room": [16, 16, 22, 0], "holes": [[6, 12.5, 5.3], [104, 12.5, 5.3]],
+      "busbar": { "screws": 6, "pitch": 12, "studs": 45, "a_end": "left", "lugs": "down" } },
+    { "id": "controller", "name": "Controller board in a DIN case", "label": "Controller", "x": 30, "y": 30, "w": 60, "h": 40, "d": 15,
+      "color": "#1d1f22", "room": [0, 0, 0, 14], "note": "Its terminal strip runs along the top edge.",
+      "strips": [{ "edge": "top", "names": ["12V", "GND", "IO1"], "start": 12, "pitch": 12 }] },
+    { "id": "relay", "name": "Relay module, 1 channel", "label": "Relay", "x": 130, "y": 30, "w": 50, "h": 40, "d": 20,
+      "color": "#1f63d6", "room": [0, 0, 14, 14],
+      "strips": [{ "edge": "top", "names": ["+", "-", "IN1"], "start": 10, "pitch": 12 },
+                 { "edge": "bottom", "names": ["COM1", "NO1", "NC1"], "start": 10, "pitch": 12 }] },
+    { "id": "gland_in", "name": "Cable gland: 12 V supply in (left wall)", "label": "Supply in", "mount": "wall", "x": -10, "y": 163.5,
+      "r": 7, "len": 18, "terminals": { "+": { "x": 0, "y": 4 }, "-": { "x": 0, "y": -4 } } },
+    { "id": "gland_pump", "name": "Cable gland: pump out (floor)", "label": "Pump out", "mount": "wall", "x": 250, "y": -10,
+      "r": 7, "len": 18, "terminals": { "+": { "x": -4, "y": 0 }, "-": { "x": 4, "y": 0 } } }
+  ],
+  "wires": [
+    { "id": "sup+", "from": "gland_in.+", "to": "fuse.in", "gauge": "16 AWG", "colour": "red", "group": "power" },
+    { "id": "fused", "from": "fuse.out", "to": "bar_pos.A", "gauge": "16 AWG", "colour": "red", "group": "power" },
+    { "id": "sup-", "from": "gland_in.-", "to": "bar_neg.A", "gauge": "16 AWG", "colour": "black", "group": "power" },
+    { "id": "ctl+", "from": "bar_pos.1", "to": "controller.12V", "gauge": "20 AWG", "colour": "red", "group": "control" },
+    { "id": "ctl-", "from": "bar_neg.1", "to": "controller.GND", "gauge": "20 AWG", "colour": "black", "group": "control" },
+    { "id": "rly+", "from": "bar_pos.2", "to": "relay.+", "gauge": "20 AWG", "colour": "red", "group": "control" },
+    { "id": "rly-", "from": "bar_neg.2", "to": "relay.-", "gauge": "20 AWG", "colour": "black", "group": "control" },
+    { "id": "sig", "from": "controller.IO1", "to": "relay.IN1", "gauge": "22 AWG", "colour": "green", "group": "control" },
+    { "id": "com", "from": "bar_pos.3", "to": "relay.COM1", "gauge": "18 AWG", "colour": "red", "group": "load" },
+    { "id": "pump+", "from": "relay.NO1", "to": "gland_pump.+", "gauge": "18 AWG", "colour": "orange", "group": "load",
+      "note": "switched +12 V to the pump" },
+    { "id": "pump-", "from": "bar_neg.3", "to": "gland_pump.-", "gauge": "18 AWG", "colour": "black", "group": "load" }
+  ],
+  "steps": [
+    { "title": "Controller and relay", "wires": ["ctl+", "ctl-", "rly+", "rly-", "sig"],
+      "notes": ["Power both boards from the bars: red to the +12 V bar, black to the 0 V bar.",
+                "The controller's **IO1** drives the relay's **IN1** on a green wire."] },
+    { "title": "Pump output", "wires": ["group:load"],
+      "notes": ["+12 V bar screw 3 to the relay's COM1. The relay's NO1 goes out to the pump on orange.",
+                "The pump's 0 V comes straight from the 0 V bar."] },
+    { "title": "Supply last", "wires": ["group:power"],
+      "notes": ["Fuse **out** of its holder. Wire the supply in, then fit the fuse."] }
+  ],
+  "build_order": ["Screw every part to the plate.", "Wire the steps above in order: the supply goes last."]
+}
